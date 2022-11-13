@@ -1,0 +1,18 @@
+version: "3.1"
+
+services:
+  mongodb:
+    image: mongo
+    restart: always
+    ports: 
+      - 27017:27017
+
+  spring-mongodb-demo: 
+    build: .
+    restart: always
+    ports: 
+      - 8080:8080
+    depends_on:
+      - mongodb
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/db
