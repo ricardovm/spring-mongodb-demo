@@ -25,7 +25,7 @@ public class WishList {
         this.clientId = clientId;
     }
 
-    boolean addProduct(String productId) {
+    public boolean addProduct(String productId) {
         if (items.size() == ITEMS_LIMIT) {
             return false;
         }
@@ -35,7 +35,7 @@ public class WishList {
         return true;
     }
 
-    boolean removeItem(String productId) {
+    public boolean removeItem(String productId) {
         return items.remove(productId);
     }
 
