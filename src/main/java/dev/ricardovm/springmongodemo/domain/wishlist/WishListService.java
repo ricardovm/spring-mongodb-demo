@@ -19,8 +19,8 @@ public class WishListService {
         this.repository = repository;
     }
 
-    public Optional<WishList> get(String client) {
-        return repository.findById(client);
+    public Optional<WishList> get(String clientId) {
+        return repository.findById(clientId);
     }
 
     public WishList addItem(String clientId, String productId) throws NotAddedException {

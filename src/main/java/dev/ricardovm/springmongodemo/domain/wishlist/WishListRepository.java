@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public interface WishListRepository {
 
-    Optional<WishList> findById(String client);
+    Optional<WishList> findById(String clientId);
 
     WishList save(WishList wishList);
 }

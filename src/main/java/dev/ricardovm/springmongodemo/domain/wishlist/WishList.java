@@ -21,8 +21,8 @@ public class WishList {
 
     }
 
-    public WishList(String client) {
-        this.clientId = client;
+    public WishList(String clientId) {
+        this.clientId = clientId;
     }
 
     boolean addProduct(String productId) {
