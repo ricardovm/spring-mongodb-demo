@@ -72,8 +72,8 @@ class AddItemUseCaseTest {
     }
 
     @Test
-    @DisplayName("GIVEN I have a list WHEN I try to add 20 items THEN it should throws NotAddedException")
-    void given_i_have_a_list_when_i_try_to_add_20_items_then_it_should_throws_notaddedexception() throws NotAddedException {
+    @DisplayName("GIVEN I have a list WHEN I try to add 20 items THEN it should throw NotAddedException")
+    void given_i_have_a_list_when_i_try_to_add_20_items_then_it_should_throw_notaddedexception() throws NotAddedException {
         var clientId =  "client";
         var wishList = new WishList(clientId);
 
@@ -103,5 +103,4 @@ class AddItemUseCaseTest {
 
         assertEquals(1, result.getItems().size());
     }
-
 }

@@ -51,8 +51,8 @@ class RemoveItemUseCaseTest {
     }
 
     @Test
-    @DisplayName("GIVEN I have a list with items WHEN I try to remove an non-existing one THEN it should throws NotFoundException")
-    void given_i_have_a_list_with_items_when_i_try_to_remove_an_non_existing_one_then_it_should_throws_notfoundexception() {
+    @DisplayName("GIVEN I have a list with items WHEN I try to remove an non-existing one THEN it should throw NotFoundException")
+    void given_i_have_a_list_with_items_when_i_try_to_remove_an_non_existing_one_then_it_should_throw_notfoundexception() {
         var clientId =  "client";
         var wishList = new WishList(clientId);
 
@@ -68,8 +68,8 @@ class RemoveItemUseCaseTest {
     }
 
     @Test
-    @DisplayName("GIVEN I have a non-existing client WHEN I try to remove an item THEN it should throws NotFoundException")
-    void given_i_have_a_non_existing_client_when_i_try_to_remove_an_item_then_it_should_throws_notfoundexception() {
+    @DisplayName("GIVEN I have a non-existing client WHEN I try to remove an item THEN it should throw NotFoundException")
+    void given_i_have_a_non_existing_client_when_i_try_to_remove_an_item_then_it_should_throw_notfoundexception() {
         when(repository.findById(any())).thenReturn(Optional.empty());
 
         assertThrows(

@@ -67,5 +67,4 @@ class CheckProductInListUseCaseTest {
         assertThrows(NotFoundException.class,
                 () -> instance.execute("clientId", "productId:1234"));
     }
-
 }

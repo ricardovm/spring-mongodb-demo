@@ -4,7 +4,7 @@ FROM openjdk:17-jdk
 RUN mkdir /app
 WORKDIR /app
 COPY . .
-RUN ./mvnw -DskipTests package -Pprod
+RUN ./mvnw -DskipTests package
 
 # Runtime image
 FROM openjdk:17-jdk
