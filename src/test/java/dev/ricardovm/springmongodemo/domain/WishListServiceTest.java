@@ -38,13 +38,13 @@ class WishListServiceTest {
     @DisplayName("GIVEN I have a client id WHEN I search for its wish list THEN I get the wish list")
     void given_i_have_a_client_id_when_i_search_for_its_wish_list_then_i_get_the_wish_list() {
         var id = "client";
-        var item = new WishList(id);
+        var productId = new WishList(id);
 
-        when(repository.findById(id)).thenReturn(Optional.of(item));
+        when(repository.findById(id)).thenReturn(Optional.of(productId));
 
         var result = instance.get(id);
 
-        assertEquals(item, result.get());
+        assertEquals(productId, result.get());
     }
 
     @Test
@@ -62,19 +62,13 @@ class WishListServiceTest {
     @Test
     @DisplayName("GIVEN I have client with no wish list WHEN I try to add a new item THEN it should be added")
     void given_i_have_client_with_no_wish_list_when_i_try_to_add_a_new_item_then_it_should_be_added() throws NotAddedException {
-        var client = "client:" + UUID.randomUUID();
+        var clientId =  "client:" + UUID.randomUUID();
         var productId = "productId:" + UUID.randomUUID();
-        var productName = "productName:" + UUID.randomUUID();
 
-        var result = instance.addItem(
-                client,
-                new WishList.Item(
-                        productId,
-                        productName));
+        var result = instance.addItem(clientId, productId);
 
-        assertEquals(client, result.getClient());
-        assertEquals(productId, result.getItems().get(0).getProductId());
-        assertEquals(productName, result.getItems().get(0).getProductName());
+        assertEquals(clientId, result.getClientId());
+        assertTrue(result.getItems().contains(productId));
         verify(repository).save(result);
     }
 
@@ -83,19 +77,17 @@ class WishListServiceTest {
     @ValueSource(ints = {18, 19, 20})
     @DisplayName("GIVEN I have a list WHEN I try to...")
     void given_i_have_a_list_when_i_try_to_add_X_items_then_it_should_be_added(int numItems) {
-        var client = "client";
-        var wishList = new WishList(client);
+        var clientId =  "client";
+        var wishList = new WishList(clientId);
 
-        when(repository.findById(client)).thenReturn(Optional.of(wishList));
+        when(repository.findById(clientId)).thenReturn(Optional.of(wishList));
 
         for (var i = 0; i < numItems; i++) {
-            var item = new WishList.Item(
-                    "productId:" + UUID.randomUUID(),
-                    "productName:" + UUID.randomUUID());
+            var productId = "productId:" + UUID.randomUUID();
 
             try {
-                var result = instance.addItem(client, item);
-                assertTrue(result.getItems().contains(item));
+                var result = instance.addItem(clientId, productId);
+                assertTrue(result.getItems().contains(productId));
                 assertEquals(i + 1, result.getItems().size());
             } catch (Exception e) {
                 fail(e);
@@ -106,100 +98,68 @@ class WishListServiceTest {
     @Test
     @DisplayName("GIVEN I have a list WHEN I try to add 20 items THEN it should throws NotAddedException")
     void given_i_have_a_list_when_i_try_to_add_20_items_then_it_should_throws_notaddedexception() throws NotAddedException {
-        var client = "client";
-        var wishList = new WishList(client);
+        var clientId =  "client";
+        var wishList = new WishList(clientId);
 
-        when(repository.findById(client)).thenReturn(Optional.of(wishList));
+        when(repository.findById(clientId)).thenReturn(Optional.of(wishList));
 
         for (var i = 0; i < 20; i++) {
-            instance.addItem(client, new WishList.Item(
-                    "productId:" + UUID.randomUUID(),
-                    "productName:" + UUID.randomUUID()));
+            instance.addItem(clientId, "productId:" + UUID.randomUUID());
         }
 
-        assertThrows(NotAddedException.class, () -> {
-            instance.addItem(client, new WishList.Item(
-                    "productId:" + UUID.randomUUID(),
-                    "productName:" + UUID.randomUUID()));
-        });
+        assertThrows(NotAddedException.class,
+                () -> instance.addItem(clientId, "productId:" + UUID.randomUUID()));
     }
 
     @Test
-    @DisplayName("GIVEN I have a list WHEN I try to add an item twice THEN it should throws NotAddedException")
-    void given_i_have_a_list_when_i_try_to_add_an_items_twice_then_it_should_throws_notaddedexception() throws NotAddedException {
-        var client = "client";
-        var wishList = new WishList(client);
+    @DisplayName("GIVEN I have a list WHEN I try to add an item twice THEN it should not be added")
+    void given_i_have_a_list_when_i_try_to_add_an_items_twice_then_it_should_not_be_added() throws NotAddedException {
+        var clientId =  "client";
+        var wishList = new WishList(clientId);
 
-        when(repository.findById(client)).thenReturn(Optional.of(wishList));
-
-        var item = new WishList.Item(
-                "productId:" + UUID.randomUUID(),
-                "productName:" + UUID.randomUUID());
-
-        instance.addItem(client, item);
-
-        assertThrows(NotAddedException.class, () -> instance.addItem(client, item));
-    }
-
-    @Test
-    @DisplayName("GIVEN I have a list WHEN I try to add an item with tha same productId THEN it should throws NotAddedException")
-    void given_i_have_a_list_when_i_try_to_add_an_items_with_the_same_productid_then_it_should_throws_notaddedexception() throws NotAddedException {
-        var client = "client";
-        var wishList = new WishList(client);
-
-        when(repository.findById(client)).thenReturn(Optional.of(wishList));
+        when(repository.findById(clientId)).thenReturn(Optional.of(wishList));
 
         var productId = "productId:" + UUID.randomUUID();
 
-        var item = new WishList.Item(
-                productId,
-                "productName:" + UUID.randomUUID());
+        instance.addItem(clientId, productId);
 
-        instance.addItem(client, item);
+        var result = instance.addItem(clientId, productId);
 
-        var item2 = new WishList.Item(
-                productId,
-                "productName:" + UUID.randomUUID());
-
-        assertThrows(NotAddedException.class, () -> instance.addItem(client, item2));
+        assertEquals(1, result.getItems().size());
     }
 
     @Test
     @DisplayName("GIVEN I have a list with items WHEN I try to remove an existing one THEN it should be removed")
     void given_i_have_a_list_with_items_when_i_try_to_remove_an_existing_one_then_it_should_be_removed() throws NotFoundException {
-        var client = "client";
-        var wishList = new WishList(client);
+        var clientId =  "client";
+        var wishList = new WishList(clientId);
 
-        var item = new WishList.Item(
-                "productId:" + UUID.randomUUID(),
-                "productName:" + UUID.randomUUID());
+        var productId = "productId:" + UUID.randomUUID();
 
-        wishList.addItem(item);
+        wishList.addProduct(productId);
 
-        when(repository.findById(client)).thenReturn(Optional.of(wishList));
+        when(repository.findById(clientId)).thenReturn(Optional.of(wishList));
 
-        instance.removeItem(client, item.getProductId());
+        instance.removeItem(clientId, productId);
 
-        assertFalse(wishList.getItems().contains(item));
+        assertFalse(wishList.getItems().contains(productId));
     }
 
     @Test
     @DisplayName("GIVEN I have a list with items WHEN I try to remove an non-existing one THEN it should throws NotFoundException")
     void given_i_have_a_list_with_items_when_i_try_to_remove_an_non_existing_one_then_it_should_throws_notfoundexception() {
-        var client = "client";
-        var wishList = new WishList(client);
+        var clientId =  "client";
+        var wishList = new WishList(clientId);
 
-        var item = new WishList.Item(
-                "productId:1234",
-                "productName:" + UUID.randomUUID());
+        var productId = "productId:1234";
 
-        wishList.addItem(item);
+        wishList.addProduct(productId);
 
-        when(repository.findById(client)).thenReturn(Optional.of(wishList));
+        when(repository.findById(clientId)).thenReturn(Optional.of(wishList));
 
         assertThrows(
                 NotFoundException.class,
-                () -> instance.removeItem(client, item.getProductId() + ":" + UUID.randomUUID()));
+                () -> instance.removeItem(clientId, productId + ":" + UUID.randomUUID()));
     }
 
     @Test

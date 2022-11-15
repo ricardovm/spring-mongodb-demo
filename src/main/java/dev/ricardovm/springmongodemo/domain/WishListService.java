@@ -23,24 +23,24 @@ public class WishListService {
         return repository.findById(client);
     }
 
-    public WishList addItem(String client, WishList.Item item) throws NotAddedException {
-        var wishList = repository.findById(client).orElseGet(() -> new WishList(client));
+    public WishList addItem(String clientId, String productId) throws NotAddedException {
+        var wishList = repository.findById(clientId).orElseGet(() -> new WishList(clientId));
 
-        var wasAdded = wishList.addItem(item);
+        var wasAdded = wishList.addProduct(productId);
 
         if (!wasAdded) {
             throw new NotAddedException(
-                    "This item could not be added to the list. It may already have been added or the list is full");
+                    "This item could not be added to the list, the list is full");
         }
 
         return repository.save(wishList);
     }
 
-    public void removeItem(String client, String productId) throws NotFoundException {
-        var wishList = repository.findById(client);
+    public void removeItem(String clientId, String productId) throws NotFoundException {
+        var wishList = repository.findById(clientId);
 
         if (wishList.isEmpty()) {
-            logger.warn("client {} not found", client);
+            logger.warn("client {} not found", clientId);
             throw new NotFoundException("List not found");
         }
 

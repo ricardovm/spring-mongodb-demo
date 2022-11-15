@@ -3,11 +3,9 @@ package dev.ricardovm.springmongodemo.domain;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 @Document
 public class WishList {
@@ -15,76 +13,37 @@ public class WishList {
     public static final int ITEMS_LIMIT = 20;
 
     @Id
-    private String client;
+    private String clientId;
 
-    private Instant createdAt = Instant.now();
-
-    private List<Item> items = new ArrayList<>();
+    private Set<String> items = new HashSet<>();
 
     public WishList() {
 
     }
 
     public WishList(String client) {
-        this.client = client;
+        this.clientId = client;
     }
 
-    boolean addItem(Item item) {
-        if (items.size() == ITEMS_LIMIT
-                || items.stream().anyMatch(i -> Objects.equals(i.getProductId(), item.getProductId()))) {
+    boolean addProduct(String productId) {
+        if (items.size() == ITEMS_LIMIT) {
             return false;
         }
 
-        items.add(item);
+        items.add(productId);
 
         return true;
     }
 
-    boolean removeItem(Item item) {
-        return items.remove(item);
-    }
-
     boolean removeItem(String productId) {
-        return items.removeIf(item -> Objects.equals(item.productId, productId));
+        return items.remove(productId);
     }
 
-    public String getClient() {
-        return client;
+    public String getClientId() {
+        return clientId;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public List<Item> getItems() {
-        return Collections.unmodifiableList(items);
-    }
-
-    public static class Item {
-
-        private String productId;
-        private String productName;
-        private Instant includedAt = Instant.now();
-
-        public Item() {
-
-        }
-
-        public Item(String productId, String productName) {
-            this.productId = productId;
-            this.productName = productName;
-        }
-
-        public String getProductId() {
-            return productId;
-        }
-
-        public String getProductName() {
-            return productName;
-        }
-
-        public Instant getIncludedAt() {
-            return includedAt;
-        }
+    public Set<String> getItems() {
+        return Collections.unmodifiableSet(items);
     }
 }
