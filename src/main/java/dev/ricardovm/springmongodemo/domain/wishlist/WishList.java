@@ -1,4 +1,4 @@
-package dev.ricardovm.springmongodemo.domain;
+package dev.ricardovm.springmongodemo.domain.wishlist;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

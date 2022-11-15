@@ -1,4 +1,4 @@
-package dev.ricardovm.springmongodemo.domain;
+package dev.ricardovm.springmongodemo.domain.wishlist;
 
 import java.util.Optional;
 
