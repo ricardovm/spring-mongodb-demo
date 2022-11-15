@@ -31,7 +31,7 @@ public class WishList {
 
     boolean addItem(Item item) {
         if (items.size() == ITEMS_LIMIT
-                || items.contains(item)) {
+                || items.stream().anyMatch(i -> Objects.equals(i.getProductId(), item.getProductId()))) {
             return false;
         }
 

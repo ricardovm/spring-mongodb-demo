@@ -74,7 +74,7 @@ class WishListTest {
     }
 
     @Test
-    @DisplayName("GIVEN I have a list WHEN I try to add a item twice THEN it should not be added")
+    @DisplayName("GIVEN I have a list WHEN I try to add an item twice THEN it should not be added")
     void given_i_have_a_list_when_i_try_to_add_an_item_twice_then_it_should_not_be_added() {
         var wishList = new WishList();
         var item = new WishList.Item(
@@ -86,6 +86,26 @@ class WishListTest {
         assertTrue(wishList.getItems().contains(item));
 
         var secondResult = wishList.addItem(item);
+        assertFalse(secondResult);
+        assertEquals(1, wishList.getItems().size());
+    }
+
+    @Test
+    @DisplayName("GIVEN I have a list WHEN I try to add an item with same id THEN it should not be added")
+    void given_i_have_a_list_when_i_try_to_add_an_item_with_same_id_then_it_should_not_be_added() {
+        var wishList = new WishList();
+        var item = new WishList.Item(
+                "productId:" + UUID.randomUUID(),
+                "productName:" + UUID.randomUUID());
+
+        var firstResult = wishList.addItem(item);
+        assertTrue(firstResult);
+        assertTrue(wishList.getItems().contains(item));
+
+        var secondItem = new WishList.Item(
+                item.getProductId(),
+                item.getProductName());
+        var secondResult = wishList.addItem(secondItem);
         assertFalse(secondResult);
         assertEquals(1, wishList.getItems().size());
     }
