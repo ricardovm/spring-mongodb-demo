@@ -14,20 +14,10 @@ public class RemoveItemUseCase {
     }
 
     public void execute(String clientId, String productId) throws NotFoundException {
-        var wishList = repository.findById(clientId);
+        var result = repository.removeItemFromList(clientId, productId);
 
-        if (wishList.isEmpty()) {
-            throw new NotFoundException("List not found");
+        if (!result) {
+            throw new NotFoundException("list not found");
         }
-
-        var list = wishList.get();
-
-        var wasRemoved = list.removeItem(productId);
-
-        if (!wasRemoved) {
-            throw new NotFoundException("Item not found");
-        }
-
-        repository.save(list);
     }
 }

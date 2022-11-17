@@ -9,12 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class RemoveItemUseCaseTest {
@@ -43,11 +42,11 @@ class RemoveItemUseCaseTest {
 
         wishList.addProduct(productId);
 
-        when(repository.findById(clientId)).thenReturn(Optional.of(wishList));
+        when(repository.removeItemFromList(any(), any())).thenReturn(true);
 
         instance.execute(clientId, productId);
 
-        assertFalse(wishList.getItems().contains(productId));
+        verify(repository).removeItemFromList(clientId, productId);
     }
 
     @Test
@@ -60,7 +59,7 @@ class RemoveItemUseCaseTest {
 
         wishList.addProduct(productId);
 
-        when(repository.findById(clientId)).thenReturn(Optional.of(wishList));
+        when(repository.removeItemFromList(any(), any())).thenReturn(false);
 
         assertThrows(
                 NotFoundException.class,
@@ -70,7 +69,7 @@ class RemoveItemUseCaseTest {
     @Test
     @DisplayName("GIVEN I have a non-existing client WHEN I try to remove an item THEN it should throw NotFoundException")
     void given_i_have_a_non_existing_client_when_i_try_to_remove_an_item_then_it_should_throw_notfoundexception() {
-        when(repository.findById(any())).thenReturn(Optional.empty());
+        when(repository.removeItemFromList(any(), any())).thenReturn(false);
 
         assertThrows(
                 NotFoundException.class,

@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WishListRepositoryImpl extends WishListRepository, MongoRepository<WishList, String> {
+public interface WishListRepositoryImpl extends WishListRepository, MongoRepository<WishList, String>, CustomWishListRepository {
 
+    boolean removeItemFromList(String clientId, String productId);
 }
