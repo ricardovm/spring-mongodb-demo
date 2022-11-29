@@ -46,7 +46,9 @@ public class WishListController {
                     )
             }
     )
-    public ResponseEntity<WishListDTO> get(GetListUseCase getListUseCase, @PathVariable String clientId) {
+    public ResponseEntity<WishListDTO> get(
+            GetListUseCase getListUseCase,
+            @PathVariable String clientId) {
         var wishList = getListUseCase.execute(clientId);
 
         if (wishList.isEmpty()) {
@@ -102,7 +104,10 @@ public class WishListController {
                     )
             }
     )
-    public void addItem(AddItemUseCase addItemUseCase, @PathVariable String clientId, @PathVariable String productId) {
+    public void addItem(
+            AddItemUseCase addItemUseCase,
+            @PathVariable String clientId,
+            @PathVariable String productId) {
         try {
             addItemUseCase.execute(clientId, productId);
         } catch (NotAddedException e) {
