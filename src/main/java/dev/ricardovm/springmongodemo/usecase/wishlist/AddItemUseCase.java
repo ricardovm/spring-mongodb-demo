@@ -3,9 +3,9 @@ package dev.ricardovm.springmongodemo.usecase.wishlist;
 import dev.ricardovm.springmongodemo.domain.exception.NotAddedException;
 import dev.ricardovm.springmongodemo.domain.wishlist.WishList;
 import dev.ricardovm.springmongodemo.domain.wishlist.WishListRepository;
-import org.springframework.stereotype.Service;
+import dev.ricardovm.springmongodemo.infra.annotations.UseCase;
 
-@Service
+@UseCase
 public class AddItemUseCase {
 
     private final WishListRepository repository;

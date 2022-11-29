@@ -2,11 +2,11 @@ package dev.ricardovm.springmongodemo.usecase.wishlist;
 
 import dev.ricardovm.springmongodemo.domain.wishlist.WishList;
 import dev.ricardovm.springmongodemo.domain.wishlist.WishListRepository;
-import org.springframework.stereotype.Service;
+import dev.ricardovm.springmongodemo.infra.annotations.UseCase;
 
 import java.util.Optional;
 
-@Service
+@UseCase
 public class GetListUseCase {
 
     private final WishListRepository repository;

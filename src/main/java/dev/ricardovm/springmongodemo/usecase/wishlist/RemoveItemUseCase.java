@@ -2,9 +2,9 @@ package dev.ricardovm.springmongodemo.usecase.wishlist;
 
 import dev.ricardovm.springmongodemo.domain.exception.NotFoundException;
 import dev.ricardovm.springmongodemo.domain.wishlist.WishListRepository;
-import org.springframework.stereotype.Service;
+import dev.ricardovm.springmongodemo.infra.annotations.UseCase;
 
-@Service
+@UseCase
 public class RemoveItemUseCase {
 
     private final WishListRepository repository;
