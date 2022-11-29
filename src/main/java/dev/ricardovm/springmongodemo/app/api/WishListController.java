@@ -28,18 +28,6 @@ import org.springframework.web.server.ResponseStatusException;
 @Tag(name = "wish list controller")
 public class WishListController {
 
-    private final AddItemUseCase addItemUseCase;
-    private final RemoveItemUseCase removeItemUseCase;
-    private final GetListUseCase getListUseCase;
-    private final CheckProductInListUseCase checkProductInListUseCase;
-
-    public WishListController(AddItemUseCase addItemUseCase, RemoveItemUseCase removeItemUseCase, GetListUseCase getListUseCase, CheckProductInListUseCase checkProductInListUseCase) {
-        this.addItemUseCase = addItemUseCase;
-        this.removeItemUseCase = removeItemUseCase;
-        this.getListUseCase = getListUseCase;
-        this.checkProductInListUseCase = checkProductInListUseCase;
-    }
-
     @GetMapping("{clientId}")
     @Operation(
             summary = "Gets the clients wish list",
@@ -58,7 +46,7 @@ public class WishListController {
                     )
             }
     )
-    public ResponseEntity<WishListDTO> get(@PathVariable String clientId) {
+    public ResponseEntity<WishListDTO> get(GetListUseCase getListUseCase, @PathVariable String clientId) {
         var wishList = getListUseCase.execute(clientId);
 
         if (wishList.isEmpty()) {
@@ -86,7 +74,10 @@ public class WishListController {
                     )
             }
     )
-    public ResponseEntity<Boolean> checkProductInList(@PathVariable String clientId, @PathVariable String productId) {
+    public ResponseEntity<Boolean> checkProductInList(
+            CheckProductInListUseCase checkProductInListUseCase,
+            @PathVariable String clientId,
+            @PathVariable String productId) {
         try {
             var result = checkProductInListUseCase.execute(clientId, productId);
             return ResponseEntity.ok(result);
@@ -111,7 +102,7 @@ public class WishListController {
                     )
             }
     )
-    public void addItem(@PathVariable String clientId, @PathVariable String productId) {
+    public void addItem(AddItemUseCase addItemUseCase, @PathVariable String clientId, @PathVariable String productId) {
         try {
             addItemUseCase.execute(clientId, productId);
         } catch (NotAddedException e) {
@@ -137,7 +128,10 @@ public class WishListController {
                     )
             }
     )
-    public void deleteItem(@PathVariable String clientId, @PathVariable String productId) {
+    public void deleteItem(
+            RemoveItemUseCase removeItemUseCase,
+            @PathVariable String clientId,
+            @PathVariable String productId) {
         try {
             removeItemUseCase.execute(clientId, productId);
         } catch (NotFoundException e) {
